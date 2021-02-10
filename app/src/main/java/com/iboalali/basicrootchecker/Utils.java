@@ -3,6 +3,7 @@ package com.iboalali.basicrootchecker;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Build;
 
 /**
@@ -10,7 +11,7 @@ import android.os.Build;
  */
 final class Utils {
 
-    static String getAppVersionNumber(Context context){
+    static String getAppVersionNumber(Context context) {
         PackageManager manager = context.getPackageManager();
         try {
             PackageInfo info = manager.getPackageInfo(context.getPackageName(), 0);
@@ -21,18 +22,17 @@ final class Utils {
         return "";
     }
 
-    static String getAndroidName(Context context, int API_Level){
-        String[] versionNames = context.getResources().getStringArray(R.array.VersionNames);
-        if (API_Level > versionNames.length){
+    static String getAndroidName(Resources resources) {
+        String[] versionNames = resources.getStringArray(R.array.VersionNames);
+
+        if (Build.VERSION.SDK_INT > versionNames.length) {
             return "(Unreleased Android version)";
         }
 
-        return versionNames[API_Level - 1];
-    }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            return versionNames[Build.VERSION.SDK_INT - 1];
+        }
 
-    private static String capitalizeWord(String word){
-        word = word.toLowerCase();
-        return Character.toUpperCase(word.charAt(0)) + word.substring(1);
+        return "";
     }
-
 }
